@@ -13,13 +13,13 @@ number_of_cell = 25
 
 off_set = 75
 
-class food:
+class food_item:
     def __init__(self, snake_body):
         self.position = self.generate_random_pos(snake_body)
 
     def draw(self):
         food_rect = pygame.Rect(off_set + self.position.x * cell_size, off_set + self.position.y * cell_size, cell_size, cell_size)
-        screen.blit(food_surface, food_rect)
+        screen_size.blit(food_surface, food_rect)
 
     def generate_random_cell(self):
         height = random.randint(0, number_of_cell - 1)
@@ -33,7 +33,7 @@ class food:
             position = self.generate_random_cell()
         return position
 
-class snake:
+class snake_body:
     def __init__(self):
         self.body = [Vector2(6, 9), Vector2(5, 9), Vector2(4, 9)]
         self.direction = Vector2(1, 0)
@@ -42,7 +42,7 @@ class snake:
     def draw(self):
         for segment in self.body:
             segment_rect = (off_set + segment.x * cell_size, off_set + segment.y * cell_size, cell_size, cell_size)
-            pygame.draw.rect(screen, yellow_color, segment_rect, 0, 6)
+            pygame.draw.rect(screen_size, yellow_color, segment_rect, 0, 6)
 
     def update(self):
         self.body.insert(0, self.body[0] + self.direction)
@@ -56,10 +56,10 @@ class snake:
         self.direction = Vector2(1, 0)
 
 
-class game:
+class game_snake:
     def __init__(self):
-        self.snake = snake()
-        self.food = food(self.snake.body)
+        self.snake = snake_body()
+        self.food = food_item(self.snake.body)
         self.state = "RUNNING"
         self.score = 0
 
@@ -97,13 +97,13 @@ class game:
         if self.snake.body[0] in headless_body:
             self.game_over()
 
-screen = pygame.display.set_mode((2*off_set + cell_size*number_of_cell, 2*off_set + cell_size*number_of_cell))
+screen_size = pygame.display.set_mode((2*off_set + cell_size*number_of_cell, 2*off_set + cell_size*number_of_cell))
 
 pygame.display.set_caption("Snake")
 
-clock = pygame.time.Clock()
+clock_time = pygame.time.Clock()
 
-game = game()
+game_main = game_snake()
 food_surface = pygame.image.load("Graphics/food.png")
 
 snake_update = pygame.USEREVENT
@@ -112,32 +112,32 @@ pygame.time.set_timer(snake_update, 200)
 while True:
     for event in pygame.event.get():
         if event.type == snake_update:
-            game.update()
+            game_main.update()
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
 
         if event.type == pygame.KEYDOWN:
 
-            if game.state == "STOPPED":
-                game.state = "RUNNING"
-            if event.key == pygame.K_UP and game.snake.direction != Vector2(0, 1):
-                game.snake.direction = Vector2(0, -1)
-            if event.key == pygame.K_DOWN and game.snake.direction != Vector2(0, -1):
-               game.snake.direction = Vector2(0, 1)
-            if event.key == pygame.K_LEFT and game.snake.direction != Vector2(1, 0):
-                game.snake.direction = Vector2(-1, 0)
-            if event.key == pygame.K_RIGHT and game.snake.direction != Vector2(-1, 0):
-                game.snake.direction = Vector2(1, 0)
+            if game_main.state == "STOPPED":
+                game_main.state = "RUNNING"
+            if event.key == pygame.K_UP and game_main.snake.direction != Vector2(0, 1):
+                game_main.snake.direction = Vector2(0, -1)
+            if event.key == pygame.K_DOWN and game_main.snake.direction != Vector2(0, -1):
+               game_main.snake.direction = Vector2(0, 1)
+            if event.key == pygame.K_LEFT and game_main.snake.direction != Vector2(1, 0):
+                game_main.snake.direction = Vector2(-1, 0)
+            if event.key == pygame.K_RIGHT and game_main.snake.direction != Vector2(-1, 0):
+                game_main.snake.direction = Vector2(1, 0)
 
-    screen.fill(blue_color)
-    pygame.draw.rect(screen, yellow_color,
+    screen_size.fill(blue_color)
+    pygame.draw.rect(screen_size, yellow_color,
     (off_set -5, off_set-5, cell_size*number_of_cell+10, cell_size*number_of_cell+10), 5)
-    game.draw()
+    game_main.draw()
     title_surface = title_font.render("Snake", True, yellow_color)
-    score_surface = score_font.render(str(game.score), True, yellow_color)
-    screen.blit(title_surface, (off_set-5, 20))
-    screen.blit(score_surface, (off_set-5, off_set + cell_size*number_of_cell + 10))
+    score_surface = score_font.render(str(game_main.score), True, yellow_color)
+    screen_size.blit(title_surface, (off_set-5, 20))
+    screen_size.blit(score_surface, (off_set-5, off_set + cell_size*number_of_cell + 10))
 
     pygame.display.update()
-    clock.tick(60)
+    clock_time.tick(60)
