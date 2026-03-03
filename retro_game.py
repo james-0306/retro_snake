@@ -22,9 +22,9 @@ class food:
         screen.blit(food_surface, food_rect)
 
     def generate_random_cell(self):
-        x = random.randint(0, number_of_cell - 1)
-        y = random.randint(0, number_of_cell - 1)
-        return Vector2(x, y)
+        height = random.randint(0, number_of_cell - 1)
+        width = random.randint(0, number_of_cell - 1)
+        return Vector2(height, width)
 
     def generate_random_pos(self, snake_body):
 
